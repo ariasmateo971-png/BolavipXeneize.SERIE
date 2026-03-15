@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Estreno del Capítulo</title>
+
+<style>
+
+body{
+margin:0;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+font-family:Arial;
+color:white;
+overflow:hidden;
+
+background:linear-gradient(270deg,#1e3a8a,#2563eb,#0ea5e9,#facc15);
+background-size:600% 600%;
+animation:bgmove 12s ease infinite;
+}
+
+@keyframes bgmove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+.hourglass{
+position:relative;
+width:220px;
+height:320px;
+margin:20px;
+transition:transform 1s;
+}
+
+.glass{
+position:absolute;
+width:220px;
+height:320px;
+border:6px solid white;
+border-radius:20px;
+backdrop-filter:blur(4px);
+}
+
+canvas{
+position:absolute;
+left:0;
+top:0;
+}
+
+#contador{
+font-size:32px;
+font-weight:bold;
+margin-top:20px;
+}
+
+#mensaje{
+display:none;
+text-align:center;
+animation:aparecer 2s ease;
+}
+
+#mensaje h2{
+font-size:36px;
+color:#facc15;
+}
+
+#mensaje a{
+display:inline-block;
+margin-top:20px;
+padding:12px 20px;
+background:#facc15;
+color:black;
+text-decoration:none;
+border-radius:8px;
+font-weight:bold;
+animation:brillo 2s infinite;
+}
+
+@keyframes aparecer{
+0%{opacity:0;transform:scale(0.5)}
+100%{opacity:1;transform:scale(1)}
+}
+
+@keyframes brillo{
+0%{box-shadow:0 0 5px #facc15}
+50%{box-shadow:0 0 20px #facc15}
+100%{box-shadow:0 0 5px #facc15}
+}
+
+.roto{
+animation:romper 1s forwards;
+}
+
+@keyframes romper{
+0%{transform:scale(1) rotate(0)}
+50%{transform:scale(1.2) rotate(10deg)}
+100%{transform:scale(0) rotate(90deg)}
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Cuenta regresiva</h1>
+
+<div class="hourglass" id="reloj">
+<div class="glass"></div>
+<canvas id="sand"></canvas>
+</div>
+
+<div id="contador"></div>
+
+<div id="mensaje">
+<h2>🎉 El capítulo 1 ha sido desbloqueado</h2>
+<a href="https://youtube.com/@bolavip.xeneize.oficial?si=dLj7Q1zntXhMcsN6" target="_blank">
+Ir a mi canal de YouTube
+</a>
+</div>
+
+<script>
+
+/* CONTADOR */
+
+const fechaObjetivo = new Date("March 18, 2026 00:00:00").getTime();
+
+function actualizarContador(){
+
+const ahora = new Date().getTime();
+const diferencia = fechaObjetivo - ahora;
+
+if(diferencia <= 0){
+
+document.getElementById("contador").style.display="none";
+
+const reloj = document.getElementById("reloj");
+reloj.classList.add("roto");
+
+setTimeout(()=>{
+reloj.style.display="none";
+document.getElementById("mensaje").style.display="block";
+},1000);
+
+return;
+}
+
+const dias = Math.floor(diferencia/(1000*60*60*24));
+const horas = Math.floor((diferencia%(1000*60*60*24))/(1000*60*60));
+const minutos = Math.floor((diferencia%(1000*60*60))/(1000*60));
+const segundos = Math.floor((diferencia%(1000*60))/1000);
+
+document.getElementById("contador").innerHTML =
+dias+"d "+horas+"h "+minutos+"m "+segundos+"s";
+
+}
+
+setInterval(actualizarContador,1000);
+
+/* ARENA */
+
+const canvas = document.getElementById("sand");
+const ctx = canvas.getContext("2d");
+
+canvas.width = 220;
+canvas.height = 320;
+
+let particles=[];
+
+for(let i=0;i<80;i++){
+particles.push({
+x:110+(Math.random()*8-4),
+y:Math.random()*150,
+speed:1+Math.random()*2,
+size:2+Math.random()*2
+});
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+particles.forEach(p=>{
+
+ctx.fillStyle="#facc15";
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+ctx.fill();
+
+p.y+=p.speed;
+
+if(p.y>210){
+p.y=Math.random()*150;
+}
+
+});
+
+requestAnimationFrame(draw);
+
+}
+
+draw();
+
+</script>
+
+</body>
+</html>
